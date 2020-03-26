@@ -6,6 +6,7 @@ const app = express()
 
 const port = process.env.PORT_SERVER || 3333
 
+app.use(express.json())
 app.use(routes)
 
 app.listen(port, ()=>{
