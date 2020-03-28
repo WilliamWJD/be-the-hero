@@ -1,12 +1,39 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-
+import React, {useState} from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi'
+
 import './styles.css'
+
+import api from '../../services/api'
 
 import logoImg from '../../assets/logo.svg'
 
 export default function NewIncident(){
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [value, setValue] = useState('')
+
+    const ongId = localStorage.getItem('ongId')
+
+    const history = useHistory()
+
+    async function handleNewIncident(e){
+        e.preventDefault()
+        const data = {
+            title, description, value
+        }
+        try {
+            await api.post('/incidents', data ,{
+                headers: {
+                    authorization: ongId
+                }
+            })
+            history.push('/profile')
+        } catch (error) {
+            alert('Erro ao cadastrar caso, tente novamente.')
+        }
+    }
+
     return(
         <div className="new-incident-container">
             <div className="content">
@@ -19,10 +46,25 @@ export default function NewIncident(){
                         Voltar para profile
                     </Link>
                 </section>
-                <form action="">
-                    <input type="text" placeholder="Título do caso"/>
-                    <textarea type="email" placeholder="Descrição"/>
-                    <input placeholder="Valor em reais"/>
+                <form onSubmit={handleNewIncident}>
+                    <input 
+                        type="text" 
+                        placeholder="Título do caso"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                    />
+                    <textarea 
+                        type="text" 
+                        placeholder="Descrição"
+                        placeholder="Descrição"
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                    <input 
+                        type="text" 
+                        placeholder="Valor em reais"
+                        placeholder="Valor"
+                        onChange={e => setValue(e.target.value)}
+                    />
 
                     <button className="button" type="submit">Cadastrar</button>
                 </form>
