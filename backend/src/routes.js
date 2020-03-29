@@ -8,7 +8,11 @@ const IncidentController = require('./controllers/IncidentController')
 const ProfileController = require('./controllers/ProfileController')
 const SessionController = require('./controllers/SessionController')
 
-routes.post('/sessions', SessionController.create)
+routes.post('/sessions',celebrate({
+    [Segments.BODY]:Joi.object().keys({
+        id: Joi.required()
+    })
+}) ,SessionController.create)
 
 routes.get('/ongs', OngController.index)
 routes.post('/ongs', celebrate({
